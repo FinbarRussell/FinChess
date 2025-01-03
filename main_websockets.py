@@ -124,26 +124,17 @@ class Pawn(Sprite):
                 self.availble_squares.append([self.row+1,self.col-1])
         
 
-    def promote(self, pieces):
-        if self.row == 0 or self.row ==7:
-            print("pawn at back rank")
-            #get userinput
-            user_input = ""
-
-            while user_input != "queen" and user_input != "rook" and user_input != "bishop" and user_input != "knight":
-                user_input = input("Enter Piece ('Queen' or 'Rook' or 'Bishop' or 'Knight')")
-                print(user_input)
-
-            if user_input == "queen":
-                pieces.append(Queen(row=self.row,col=self.col,colour=self.colour))
-            if user_input == "rook":
-                pieces.append(Rook(row=self.row,col=self.col,colour=self.colour))
-            if user_input == "bishop":
-                pieces.append(Bishop(row=self.row,col=self.col,colour=self.colour))
-            if user_input == "knight":
-                pieces.append(Knight(row=self.row,col=self.col,colour=self.colour))
-
-            pieces.remove(self)
+    def promote(self, pieces, user_input):
+        if user_input == "queen":
+            pieces.append(Queen(row=self.row,col=self.col,colour=self.colour))
+        if user_input == "rook":
+            pieces.append(Rook(row=self.row,col=self.col,colour=self.colour))
+        if user_input == "bishop":
+            pieces.append(Bishop(row=self.row,col=self.col,colour=self.colour))
+        if user_input == "knight":
+            pieces.append(Knight(row=self.row,col=self.col,colour=self.colour))
+            
+        pieces.remove(self)
 
 
 class Knight(Sprite):

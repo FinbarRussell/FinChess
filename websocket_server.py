@@ -123,6 +123,7 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                     try:
                         # Wait for a message from the client
                         data = await websocket.receive_text()
+                        print(f"Received raw data: {data}")
                         if main.current_turn != manager.connection_roles[websocket]:
                             await manager.send_move_etc({
                                 "type": "error",
@@ -147,10 +148,28 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                     except WebSocketDisconnect:
                         print("WebSocket connection disconnected")
                         return
+                    except ValueError as ve:
+                        print(f"Value error: {ve}")
+                        await manager.send_move_etc({
+                            "type": "error",
+                            "message": "Invalid data format received"
+                        }, websocket)
+                        continue
+                    except IndexError as ie:
+                        print(f"Index error: {ie}")
+                        await manager.send_move_etc({
+                            "type": "error",
+                            "message": "Malformed data received"
+                        }, websocket)
+                        continue
                     except Exception as e:
-                        print(f"Error receiving data: {e}")
+                        print(f"Unexpected error: {e}")
+                        await manager.send_move_etc({
+                            "type": "error",
+                            "message": "An unexpected error occurred"
+                        }, websocket)
                         return
-                            
+     
                 # Send a JSON-formatted message to the frontend
                 await manager.send_move_etc({
                     "type": "possible moves",
@@ -182,8 +201,21 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                         print(f"Error receiving move: {e}")
                         return
 
-                if selected_piece.piece == "Pawn":
-                    selected_piece.promote(main.pieces)  # Handle promotion
+                if selected_piece.piece == "pawn" and (selected_piece.row == 0 or selected_piece.row ==7):
+                    await manager.send_move_etc({
+                        "type": "possible moves",
+                        "message": "Pawn at backrank, enter promotion piece."
+                    }, websocket)
+
+                    data = ""
+                    while data != "queen" and data != "rook" and data != "bishop" and data != "knight":
+                        await manager.send_move_etc({
+                        "type": "possible moves",
+                        "message": "Enter Valid piece (rook, queen, bishop, knight)."
+                    }, websocket)
+
+                        data = await websocket.receive_text()
+                    selected_piece.promote(pieces=main.pieces, user_input=data)
                 
                 main.initialise_moves(selected_piece)
                 main.initialize_board()
@@ -194,9 +226,9 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
                     "message": grid
                 })
 
-
                 main.current_turn = next_colour[main.current_turn]
-                result = f"Captured pieces: {', '.join(str(x.icon) for x in main.captured_pieces)}"
+                result = f"Captured pieces: {', '.join(str(icons_from_pieces[x.icon]) for x in main.captured_pieces)}"
+                print(result)
                 # Send a JSON-formatted message to the frontend
                 await manager.broadcast({
                     "type": "captured pieces",

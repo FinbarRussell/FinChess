@@ -49,6 +49,21 @@ icons2 = {
     }
 }
 
+icons_from_pieces = {
+        "black-pawn": "♟",
+        "black-knight": "♞",
+        "black-bishop": "♝",
+        "black-rook": "♜",
+        "black-queen": "♛",
+        "black-king": "♚",
+        "white-pawn": "♙",
+        "white-knight": "♘",
+        "white-bishop": "♗",
+        "white-rook": "♖",
+        "white-queen": "♕",
+        "white-king": "♔"
+}
+
 col_coordinates = {
     "A":0,
     "B":1,

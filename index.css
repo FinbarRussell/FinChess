@@ -1,6 +1,12 @@
+.game-container {
+    justify-content: left; /* Center the grid container */
+    display: flex;
+}
+
 .grid-container {
     display: grid;
-    justify-content: center; /* Center the grid container */
+    justify-self: left; /* Center the grid container */
+    align-items: start;
     grid-template-columns: repeat(8, 1fr); /* 8 columns of equal width */
     gap: 0px; /* No gap between cells */
     width: 90vw; /* Use a relative unit for width (90% of viewport width) */
@@ -60,7 +66,7 @@
 .cell:nth-child(62),
 .cell:nth-child(64)
  {
-    background-color:rgb(134, 68, 32)
+    background-color:rgb(218, 199, 189)
 }
 .cell:nth-child(2),
 .cell:nth-child(4),
@@ -94,5 +100,5 @@
 .cell:nth-child(59),
 .cell:nth-child(61),
 .cell:nth-child(63)  {
-    background-color:rgb(218, 199, 189)
+    background-color:rgb(134, 68, 32)
 }
